@@ -1,6 +1,6 @@
 # `image-canister`
 
-Welcome to your new `image-canister` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+Welcome to `IC-Storage-Service` a canister full on chain of Internet Computer to replicate similar to AWS S3 Storage service. 
 
 To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
 
@@ -31,6 +31,11 @@ dfx start --background
 
 # Deploys your canisters to the replica and generates your candid interface
 dfx deploy
+```
+
+```bash
+# To test image uploading
+./test_script.sh
 ```
 
 Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
