@@ -21,6 +21,8 @@ dfx help
 dfx canister --help
 ```
 
+
+#THANKS TO https://github.com/ldclabs/ic-oss
 ## Running the project locally
 
 If you want to test your project locally, you can use the following commands:
