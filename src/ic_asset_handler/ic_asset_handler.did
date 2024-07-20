@@ -1,0 +1,120 @@
+type Bucket = record {
+  status : int8;
+  trusted_eddsa_pub_keys : vec blob;
+  managers : vec principal;
+  name : text;
+  auditors : vec principal;
+  max_dir_depth : nat8;
+  max_children : nat16;
+  max_file_size : nat64;
+  visibility : nat8;
+  trusted_ecdsa_pub_keys : vec blob;
+  file_count : nat64;
+  file_id : nat32;
+};
+type CreateFileInput = record {
+  ert : opt text;
+  status : opt int8;
+  content : opt blob;
+  hash : opt blob;
+  name : text;
+  crc32 : opt nat32;
+  size : opt nat;
+  content_type : text;
+  // parent : nat32;
+};
+type CreateFileOutput = record { id : nat32; created_at : nat };
+type FileInfo = record {
+  id : nat32;
+  ert : opt text;
+  status : int8;
+  updated_at : nat;
+  hash : opt blob;
+  name : text;
+  size : nat;
+  content_type : text;
+  created_at : nat;
+  filled : nat;
+  chunks : nat32;
+  parent : nat32;
+};
+type HttpRequest = record {
+  url : text;
+  method : text;
+  body : blob;
+  headers : vec record { text; text };
+};
+type HttpStreamingResponse = record {
+  body : blob;
+  headers : vec record { text; text };
+  upgrade : opt bool;
+  streaming_strategy : opt StreamingStrategy;
+  status_code : nat16;
+};
+type Result = variant { Ok; Err : text };
+type Result_1 = variant { Ok : CreateFileOutput; Err : text };
+type Result_2 = variant { Ok : Bucket; Err };
+type Result_3 = variant { Ok : vec record { nat32; blob }; Err : text };
+type Result_4 = variant { Ok : FileInfo; Err : text };
+type Result_5 = variant { Ok : UpdateFileChunkOutput; Err : text };
+type Result_6 = variant { Ok : UpdateFileOutput; Err : text };
+type Result_7 = variant {
+  Ok :  nat32;
+  Err : record { text };
+};
+
+type StreamingCallbackHttpResponse = record {
+  token : opt StreamingCallbackToken;
+  body : blob;
+};
+type StreamingCallbackToken = record {
+  id : nat32;
+  chunk_index : nat32;
+  token : opt blob;
+  chunks : nat32;
+};
+type StreamingStrategy = variant {
+  Callback : record {
+    token : StreamingCallbackToken;
+    callback : func (StreamingCallbackToken) -> (
+        StreamingCallbackHttpResponse,
+      ) query;
+  };
+};
+type UpdateFileChunkInput = record {
+  id : nat32;
+  chunk_index : nat32;
+  content : blob;
+  crc32 : opt nat32;
+};
+type UpdateFileChunkOutput = record { updated_at : nat; filled : nat };
+type UpdateFileInput = record {
+  id : nat32;
+  ert : opt text;
+  status : opt int8;
+  hash : opt blob;
+  name : opt text;
+  content_type : opt text;
+  parent : opt nat32;
+};
+type UpdateFileOutput = record { updated_at : nat };
+service : () -> {
+  admin_set_auditors : (vec principal) -> (Result);
+  admin_set_managers : (vec principal) -> (Result);
+  api_version : () -> (nat16) query;
+  create_file : (CreateFileInput, opt blob) -> (Result_7);
+  delete_file : (nat32, opt blob) -> (Result);
+// get_bucket_info : (opt blob) -> (Result_2) query;
+  get_file_chunks : (nat32, nat32, opt nat32, opt blob) -> (Result_3) query;
+  get_file_info : (nat32, opt blob) -> (Result_4) query;
+ // get_file_info_by_hash : (blob, opt blob) -> (Result_4) query;
+  http_request : (HttpRequest) -> (HttpStreamingResponse) query;
+  http_request_streaming_callback : (StreamingCallbackToken) -> (
+      StreamingCallbackHttpResponse,
+    ) query;
+  list_files : (nat32, opt nat32, opt nat32, opt blob) -> (vec FileInfo) query;
+  update_file_chunk : (UpdateFileChunkInput, opt blob) -> (Result_5);
+  update_file_info : (UpdateFileInput, opt blob) -> (Result_6);
+  validate_admin_set_auditors : (vec principal) -> (Result);
+  validate_admin_set_managers : (vec principal) -> (Result);
+}

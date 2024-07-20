@@ -1,0 +1,22 @@
+{
+  "canisters": {
+    "image-canister-backend": {
+      "candid": "src/image-canister-backend/image-canister-backend.did",
+      "package": "image-canister-backend",
+      "type": "rust"
+    },
+    "ic_asset_handler": {
+      "candid": "src/ic_asset_handler/ic_asset_handler.did",
+      "package": "ic_asset_handler",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

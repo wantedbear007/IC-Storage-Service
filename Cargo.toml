@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "src/ic_asset_handler",
+    "src/image-canister-backend"
+]
+resolver = "2"

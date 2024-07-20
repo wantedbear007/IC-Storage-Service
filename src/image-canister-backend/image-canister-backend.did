@@ -1,0 +1,12 @@
+type ImageUploadResponse = variant { Ok : text; Err : text };
+
+type ImageParams = record {
+  content : opt blob;
+  name : text;
+  content_type : text;
+// you can add more params 
+};
+
+service : {
+    upload_image: (text, ImageParams) -> (ImageUploadResponse);
+}
